@@ -36,6 +36,13 @@ class BlogListQueryTest {
     }
 
     @Test
+    void clampsExcessivelyLargePage() {
+        int maxPage = Integer.MAX_VALUE / 100;
+        assertThat(new BlogListQuery(null, null, Integer.MAX_VALUE, null).toPageable().getPageNumber()).isEqualTo(maxPage);
+        assertThat(new BlogListQuery(null, null, 1_000_000_000, null).toPageable().getPageNumber()).isEqualTo(maxPage);
+    }
+
+    @Test
     void acceptsWhitelistedSortAndDirection() {
         Pageable pageable = new BlogListQuery("title", "asc", 1, 5).toPageable();
 

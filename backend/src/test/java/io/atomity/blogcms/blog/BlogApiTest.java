@@ -131,6 +131,11 @@ class BlogApiTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.length()").value(0))
                 .andExpect(jsonPath("$.meta.totalElements").value(3));
 
+        mockMvc.perform(get("/api/v1/blogs?page=2147483647"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.length()").value(0))
+                .andExpect(jsonPath("$.meta.totalElements").value(3));
+
         mockMvc.perform(get("/api/v1/blogs?size=1000"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.size").value(100));

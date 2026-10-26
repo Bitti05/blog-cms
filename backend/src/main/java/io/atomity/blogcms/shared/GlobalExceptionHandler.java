@@ -6,6 +6,7 @@ import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.validation.BindException;
@@ -86,6 +87,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity.badRequest()
                 .body(ApiResponse.error(apiError("BAD_REQUEST", ex.getMessage())));
+    }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidDataAccess(InvalidDataAccessApiUsageException ex) {
+        String message = ex.getCause() instanceof IllegalArgumentException ? ex.getCause().getMessage() : ex.getMessage();
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.error(apiError("BAD_REQUEST", message)));
     }
 
     @ExceptionHandler(IllegalStateException.class)

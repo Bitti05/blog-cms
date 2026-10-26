@@ -222,6 +222,9 @@ class PostApiTest extends IntegrationTest {
                 .andExpect(jsonPath("$.meta.totalPages").value(2));
         call(get("/api/v1/posts?sort=title&direction=asc&size=2&page=1"))
                 .andExpect(jsonPath("$.data[0].title").value("Spot instances"));
+        call(get("/api/v1/posts?page=2147483647"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.length()").value(0));
 
         call(get("/api/v1/posts?sort=password")).andExpect(status().isBadRequest());
         call(get("/api/v1/posts?status=BOGUS")).andExpect(status().isBadRequest());

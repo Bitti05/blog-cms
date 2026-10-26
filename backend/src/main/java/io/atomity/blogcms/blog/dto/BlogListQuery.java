@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 /**
  * Query parameters of GET /api/v1/blogs. Only published posts are ever listed, and the
- * list defaults to newest first; sort, direction, size clamp and the id tiebreaker come
+ * list defaults to newest first; sort, direction, page and size clamps and the id tiebreaker come
  * from the admin list so both APIs behave the same.
  */
 public record BlogListQuery(

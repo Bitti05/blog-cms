@@ -7,9 +7,15 @@ plugins {
 group = "io.atomity"
 version = "0.1.0-SNAPSHOT"
 
+val targetJavaVersion = if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
+    JavaVersion.current().majorVersion.toInt()
+} else {
+    21
+}
+
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
 }
 

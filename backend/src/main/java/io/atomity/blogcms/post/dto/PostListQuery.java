@@ -22,6 +22,7 @@ public record PostListQuery(
 
     private static final int DEFAULT_SIZE = 10;
     private static final int MAX_SIZE = 100;
+    private static final int MAX_PAGE = Integer.MAX_VALUE / MAX_SIZE;
     /** API sort keys → entity attributes. Anything else is rejected rather than passed to the database. */
     private static final Map<String, String> SORTABLE = Map.of(
             "updatedAt", "updatedAt",
@@ -43,7 +44,7 @@ public record PostListQuery(
         } else {
             throw ApiException.badRequest("BAD_REQUEST", "direction must be asc or desc");
         }
-        int pageNumber = page == null ? 0 : Math.max(0, page);
+        int pageNumber = page == null ? 0 : Math.min(MAX_PAGE, Math.max(0, page));
         int pageSize = size == null ? DEFAULT_SIZE : Math.min(MAX_SIZE, Math.max(1, size));
         // id breaks ties so pages never overlap. (Null placement for publishedAt is Postgres's
         // default — Spring Data can't express NULLS LAST through the Criteria API.)
